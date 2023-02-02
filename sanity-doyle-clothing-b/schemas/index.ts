@@ -1,5 +1,7 @@
-import user from "./user"
+import user from "./user";
+import product from "./product";
 
 export const schemaTypes = [
-  user
+  user,
+  product
 ]
