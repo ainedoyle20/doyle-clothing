@@ -8,7 +8,7 @@ const Home = () => {
   const [subCategory, setSubCategory] = useState("");
 
   return (
-    <div className='flex pt-10'>
+    <div className='flex pt-10 w-screen min-h-screen'>
       <Sidebar 
         setCategory={setCategory} 
         setSubCategory={setSubCategory} 

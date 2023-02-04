@@ -14,7 +14,7 @@ const Header = () => {
     <>
       <div 
         className="
-        absolute top-0 left-0 border-2 border-black w-full
+        absolute top-0 left-0 border-b-2 border-black w-full
         text-lg pl-2
         flex justify-between
         "
