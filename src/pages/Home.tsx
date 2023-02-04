@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import Sidebar from "../components/Sidebar";
-import ProductsContainer from '../components/ProductsContainer';
+import Sidebar from "../components/home/Sidebar";
+import ProductsContainer from '../components/home/ProductsContainer';
 
 const Home = () => {
   const [category, setCategory] = useState("view all");

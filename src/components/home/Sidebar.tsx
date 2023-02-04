@@ -49,11 +49,13 @@ const Sidebar: React.FC<SidebarProps> = ({ setCategory, setSubCategory, category
   return (
     <div 
       className="
+      fixed
+      top-0
       shadow-md
       min-h-screen w-[200px]
       py-2 px-2
       flex flex-col gap-5
-      pt-8
+      pt-24
       "
     >
       {categories.map(section => (

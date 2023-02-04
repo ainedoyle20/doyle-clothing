@@ -1,7 +1,8 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 
-import { fetchProducts, Product } from '../services/funcs';
+import { fetchProducts, Product } from '../../services/funcs';
 
+import HomeProduct from './HomeProduct';
 
 interface ProductsContainerProps {
   category: string;
@@ -34,17 +35,15 @@ const ProductsContainer: FunctionComponent<ProductsContainerProps> = ({ category
       setProducts(data);
     } else if (subCategory !== "") {
       const filteredProducts = data.filter(product => product.subCategory === subCategory);
-      console.log("subCategory products: ", filteredProducts);
       setProducts(filteredProducts);
     } else {
       const filteredProducts = data.filter(product => product.category === category);
-      console.log("category products: ", filteredProducts);
       setProducts(filteredProducts);
     }
   }, [data, category, subCategory]);
   
   return (
-    <div className='flex flex-col gap-5 items-center w-4/5 '>
+    <div className='flex flex-col gap-5 items-center w-full ml-[200px]'>
       <div className=' flex w-[300px] mt-2'>
         <span className={`${mens ? "border-b-[1px] border-black" : ""} w-1/2 flex justify-center cursor-pointer`}
           onClick={() => setMens(true)}
@@ -59,7 +58,14 @@ const ProductsContainer: FunctionComponent<ProductsContainerProps> = ({ category
       </div>
 
       {products.length ? (
-        <div>Products</div>
+        <div className='w-full flex flex-wrap gap-2 justify-center px-2'>
+          {products.map(product => (
+            <HomeProduct 
+              key={product._id}
+              product={product}
+            />
+          ))}
+        </div>
       ) : (
         <span>Loading...</span>
       )}

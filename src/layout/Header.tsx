@@ -17,6 +17,8 @@ const Header = () => {
         absolute top-0 left-0 border-b-2 border-black w-full
         text-lg pl-2
         flex justify-between
+        z-50
+        bg-[#FAF9F8]
         "
       >
         <Link to="/">

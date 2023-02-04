@@ -19,6 +19,12 @@ export default {
       type: "string"
     },
     {
+      name: "allColours",
+      title: "Available colours",
+      type: "array",
+      of: [{ type: "string" }]
+    },
+    {
       name: "sex",
       title: "Sex Category",
       type: "string"
