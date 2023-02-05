@@ -65,7 +65,7 @@ const DetailsContainer = () => {
         </div>
 
         <div className="w-full p-3">
-          <span>Descriptions</span>
+          <span>{productDetails?.description}</span>
         </div>
 
         <div className="w-full px-2 grid grid-cols-2 gap-2 pb-20">

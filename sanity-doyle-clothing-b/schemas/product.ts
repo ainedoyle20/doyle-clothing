@@ -30,6 +30,11 @@ export default {
       type: "string"
     },
     {
+      name: "description",
+      title: "Product Description",
+      type: "string"
+    },
+    {
       name: "category",
       title: "Product Category",
       type: "string"
