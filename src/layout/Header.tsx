@@ -2,18 +2,27 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BiShoppingBag, BiUserCircle } from "react-icons/bi";
 
+import { useUserStore } from "../store/userStore";
+import { logoutUser } from "../services/firebase";
+
 import Bow from "../assets/bow.svg";
 
 import Dropdown from "../components/Dropdown";
-import { useUserStore } from "../store/userStore";
 
 const Header = () => {
   const user = useUserStore(state => state.userProfile);
+  const setUserProfile = useUserStore(state => state.updateUserProfile);
 
   const navigate = useNavigate();
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [showUserOptions, setShowUserOptions] = useState(false);
+
+  const handleLogout = async () => {
+    await logoutUser();
+    setUserProfile(null);
+    setShowUserOptions(false);
+  }
 
   return (
     <>
@@ -86,10 +95,7 @@ const Header = () => {
               </span>
               <span 
                 className="cursor-pointer w-full px-5 hover:font-bold"
-                onClick={() => {
-                  navigate("/auth");
-                  setShowUserOptions(false);
-                }}
+                onClick={handleLogout}
               >
                 logout
               </span>

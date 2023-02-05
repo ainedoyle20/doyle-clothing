@@ -2,16 +2,33 @@ import { useState } from "react";
 import { TfiEmail } from "react-icons/tfi";
 import { RiLockPasswordLine } from "react-icons/ri";
 
+import { registerUser } from "../../services/firebase";
+import { createOrFetchUser } from "../../services/funcs";
+import { useUserStore } from "../../store/userStore";
+
 const Register = () => {
+  const setUserProfile = useUserStore((state) => state.updateUserProfile);
+
   const [registerInfo, setRegisterInfo] = useState({
     email: "",
     password: "",
     confirmPassword: ""
   });
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    
+
+    const userId = await registerUser({ email: registerInfo.email, password: registerInfo.password });
+
+    console.log("userId: ", userId);
+
+    if (!userId) {
+      alert("Sorry something went wrong, please try again later.");
+      return;
+    } else {
+      await createOrFetchUser(userId, setUserProfile);
+    }
+
     setRegisterInfo({
       email: "",
       password: "",

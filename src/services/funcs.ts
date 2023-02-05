@@ -47,3 +47,21 @@ export const fetchOtherProductColour = async (name: string, colour: string): Pro
     console.log("Error fetching other product colour: ", error);
   }
 }
+
+export const createOrFetchUser = async (userId: string, updateUserProfile: any): Promise<void> => {
+  const doc = {
+    _id: userId,
+    _type: "user",
+    userCart: []
+  }
+
+  try {
+    const res = await client.createIfNotExists(doc);
+    if (Object.keys(res).length) {
+      updateUserProfile({ _id: res._id, userCart: res.userCart });
+    }
+
+  } catch (error) {
+    console.log("Error fetching or creating user doc in sanity: ", error);
+  }
+}

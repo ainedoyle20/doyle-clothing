@@ -1,15 +1,8 @@
-import product from "./product";
-
 export default {
   name: "user",
   title: "User",
   type: "document",
   fields: [
-    {
-      name: "userId",
-      title: "User Id",
-      type: "string"
-    },
     {
       name: "userCart",
       title: "User Shopping Cart",
