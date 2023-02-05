@@ -23,11 +23,10 @@ const HomeProduct: React.FC<HomeProductProps> = ({ product }) => {
   
   return (
     <div 
-      onClick={() => navigate(`/${product._id}`)}
-      className='flex flex-col justify-between w-[250px] h-[460px] cursor-pointer mb-2 z-30'
+      className='flex flex-col justify-between w-[250px] h-[460px] mb-2 z-30'
     >
-      <img alt="product image" src={product.image[0].asset.url} className="w-full h-4/5" />
-      <div className='w-full h-1/5 flex flex-col pl-2'>
+      <img alt="product image" src={product.image[0].asset.url} className="w-full h-4/5 cursor-pointer" onClick={() => navigate(`/${product._id}`)} />
+      <div className='w-full h-1/5 flex flex-col pl-2 cursor-default'>
         <span className='text-sm'>{product.name}</span>
         <span className='text-xs'>€{product.price}</span>
         <div className='flex items-center gap-1 w-full'>

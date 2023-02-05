@@ -3,6 +3,9 @@ import { useParams } from "react-router-dom";
 
 import { Product, fetchProductDetails, fetchOtherProductColour } from "../../services/funcs";
 
+import SelectSize from "./SelectSize";
+import AddToCartBtn from "./AddToCartBtn";
+
 const colourCodes = {
   black: "#000000",
   blue: "#0000ff",
@@ -18,6 +21,8 @@ const DetailsContainer = () => {
   const { productId } = useParams();
 
   const [productDetails, setProductDetails] = useState<Product>();
+  const [selectedSize, setSelectedSize] = useState("Select Size");
+  const [addingProduct, setAddingProduct] = useState(false);
 
   useEffect(() => {
     if (!productId) return;
@@ -37,17 +42,22 @@ const DetailsContainer = () => {
     setProductDetails(details);
   }
 
+  const handleAddToCart = () => {
+    // disable if no userId
+
+  }
+
   return (
     <div className="w-screen min-h-screen flex">
-      <div className="w-full mr-[350px] flex flex-col">
-        <div className="w-full  px-2 grid grid-cols-2 gap-2 pt-20">
+      <div className="w-[900px] flex flex-col">
+        <div className="w-full px-2 grid grid-cols-2 gap-2 pt-20">
           {productDetails ? (
             productDetails.image.slice(0, 2).map((image) => (
               <img 
                 key={image._key}
                 alt="product image"
                 src={image.asset.url}
-                className="h-[460px] w-[300px]"
+                className="h-[600px] w-auto"
               />
             ))
           ) : 
@@ -65,7 +75,7 @@ const DetailsContainer = () => {
                 key={image._key}
                 alt="product image"
                 src={image.asset.url}
-                className="h-[460px] w-[300px]"
+                className="h-[600px] w-auto"
               />
             ))
           ) : 
@@ -73,7 +83,7 @@ const DetailsContainer = () => {
         </div>
       </div>
 
-      <div className="shadow-md w-[350px] h-screen fixed top-0 right-0 pt-28 px-2 flex flex-col gap-5">
+      <div className="shadow-md w-[450px] h-screen fixed top-0 right-0 pt-28 px-2 flex flex-col gap-5">
         {productDetails ? (
         <>
           <span className="font-black">{productDetails?.name}</span>
@@ -102,8 +112,15 @@ const DetailsContainer = () => {
             </div>
           </div>
 
-          {/* Select Size Dropdown */}
-          <div></div>
+          <SelectSize 
+            selectedSize={selectedSize}
+            setSelectedSize={setSelectedSize}
+          />
+
+          <AddToCartBtn 
+            handleAddToCart={handleAddToCart}
+            addingProduct={addingProduct}
+          />  
         </>
         ) : (
           null

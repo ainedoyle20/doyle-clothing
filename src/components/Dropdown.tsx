@@ -7,8 +7,8 @@ const Dropdown = () => {
   return (
     <div 
       className="
-      absolute top-[40px] right-0 w-[200px] h-[300px] 
-      border-2 border-black"
+      absolute top-[40px] right-0 w-[250px] h-[300px] 
+      border-2 border-black bg-[#FAF9F8] z-50"
     >
       <div className="w-full h-[85%] overflow-scroll border-2 border-black">
         {cart.length 
