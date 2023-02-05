@@ -1,17 +1,20 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BiShoppingBag, BiUserCircle } from "react-icons/bi";
 
 import Bow from "../assets/bow.svg";
-import Cart from "../assets/cart.svg";
 
 import Dropdown from "../components/Dropdown";
+import { useUserStore } from "../store/userStore";
 
 const Header = () => {
+  const user = useUserStore(state => state.userProfile);
+
+  const navigate = useNavigate();
+
   const [showDropdown, setShowDropdown] = useState(false);
   const [showUserOptions, setShowUserOptions] = useState(false);
-  // get user
-  const user = true;
+
   return (
     <>
       <div 
@@ -28,18 +31,18 @@ const Header = () => {
         </Link>
 
         <div className="flex gap-3 items-center pr-3">
-          {user 
-            ?  <span 
-                  onClick={() => {
-                    setShowDropdown(false);
-                    setShowUserOptions(prev => !prev);
-                  }}
-                  className="h-full w-full text-[30px] flex items-center justify-center cursor-pointer pt-1"
-                >
-                <BiUserCircle />
-              </span> 
-            : <Link to="/auth">login</Link>
-          }
+          {/*  User Icon  */}
+          <span 
+            onClick={() => {
+              setShowDropdown(false);
+              setShowUserOptions(prev => !prev);
+            }}
+            className="h-full w-full text-[30px] flex items-center justify-center cursor-pointer pt-1"
+          >
+            <BiUserCircle />
+          </span> 
+
+          {/*  Shopping Cart Icon  */}
           <div 
             className="relative cursor-pointer flex justify-center items-center"
             onClick={() => {
@@ -73,11 +76,33 @@ const Header = () => {
         <div className="absolute top-[40px] right-0 w-[100px] h-auto border-2 border-black bg-[#FAF9F8] z-50 py-2 flex flex-col gap-3">
           {user ? (
             <>
-              <span className="cursor-pointer w-full px-5 hover:font-bold">Orders</span>
-              <span className="cursor-pointer w-full px-5 hover:font-bold">logout</span>
+              <span 
+                className="cursor-pointer w-full px-5 hover:font-bold" 
+                onClick={() => {
+                  setShowUserOptions(false);
+                }}
+              >
+                Orders
+              </span>
+              <span 
+                className="cursor-pointer w-full px-5 hover:font-bold"
+                onClick={() => {
+                  navigate("/auth");
+                  setShowUserOptions(false);
+                }}
+              >
+                logout
+              </span>
             </>
           ) : (
-            <span className="cursor-pointer w-full px-5 hover:font-bold">login</span>
+            <span className="cursor-pointer w-full px-5 hover:font-bold"
+              onClick={() => {
+                navigate("/auth");
+                setShowUserOptions(false);
+              }}
+            >
+              login
+            </span>
           )}
         </div>
       ) : 
