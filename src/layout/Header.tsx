@@ -69,7 +69,7 @@ const Header = () => {
                 -translate-y-[25%] -translate-x-1/2
               "
             >
-              0
+              {user ? user.userCart.length : 0}
             </span>
           </div>
         </div>

@@ -68,3 +68,36 @@ export const otherColourQuery = (name: string, colour: string ): string => {
 
   return query;
 }
+
+export const userProfileQuery = (id: string): string => {
+  const query = `
+  *[_type == "user" && _id == "${id}"]{
+    _id,
+    userCart[]{
+      _key,
+      cartProduct->{
+        _id,
+        name,
+        colour,
+        allColours,
+        price,
+        sex,
+        description,
+        category,
+        subCategory,
+        filter,
+        image[]{
+          _key,
+          asset->{
+            url
+          }
+        }
+      },
+      count,
+      size
+    }
+  }
+  `;
+
+  return query;
+}

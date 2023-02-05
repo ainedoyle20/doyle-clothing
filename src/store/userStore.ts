@@ -1,9 +1,18 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-type TUserProfile = {
+import { Product } from "../services/funcs";
+
+export type TUserCart = {
+  _key: string;
+  cartProduct: Product;
+  count: number;
+  size: string;
+}
+
+export type TUserProfile = {
   _id: string;
-  userCart: any[];
+  userCart: TUserCart[];
 }
 
 interface UserState {

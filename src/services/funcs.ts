@@ -1,5 +1,7 @@
+import { uuidv4 } from "@firebase/util";
 import { client } from "./client";
-import { productsQuery, productDetailsQuery, otherColourQuery } from "./queries";
+import { productsQuery, productDetailsQuery, otherColourQuery, userProfileQuery } from "./queries";
+import { TUserProfile } from "../store/userStore";
 
 export type Product = {
   _id: string;
@@ -48,6 +50,17 @@ export const fetchOtherProductColour = async (name: string, colour: string): Pro
   }
 }
 
+const fetchUserProfile = async (id: string): Promise<TUserProfile | undefined> => {
+  const query = userProfileQuery(id);
+
+  try {
+    const res = await client.fetch(query);
+    return res[0];
+  } catch (error) {
+    console.log("Error fetching user profile from sanity: ", error);
+  }
+}
+
 export const createOrFetchUser = async (userId: string, updateUserProfile: any): Promise<void> => {
   const doc = {
     _id: userId,
@@ -58,10 +71,42 @@ export const createOrFetchUser = async (userId: string, updateUserProfile: any):
   try {
     const res = await client.createIfNotExists(doc);
     if (Object.keys(res).length) {
-      updateUserProfile({ _id: res._id, userCart: res.userCart });
+      const profile = await fetchUserProfile(res?._id);
+      if (profile) {
+        updateUserProfile({ _id: profile._id, userCart: profile.userCart });
+      }
     }
 
   } catch (error) {
     console.log("Error fetching or creating user doc in sanity: ", error);
+  }
+}
+
+export const removeProductFromCart = async (id: string, productKey: string, updateUserProfile:any): Promise<void> => {
+  try {
+    await client.patch(id).unset([`userCart[_key=="${productKey}"]`]).commit();
+
+    await createOrFetchUser(id, updateUserProfile);
+  } catch (error) {
+    console.log("Error removing product from cart: ", error);
+  }
+}
+
+export const addNewProductToCart = async (id: string, productId: string, productSize: string, updateUserProfile:any): Promise<void> => {
+  try {
+    await client.patch(id).setIfMissing({ userCart: [] }).insert("after", "userCart[-1]", [{
+      _key: uuidv4(),
+      _type: "document",
+      cartProduct: {
+        _type: "reference",
+        _ref: productId
+      },
+      count: 1,
+      size: productSize
+    }]).commit();
+
+    await createOrFetchUser(id, updateUserProfile);
+  } catch (error) {
+    console.log("Error removing product from cart: ", error);
   }
 }

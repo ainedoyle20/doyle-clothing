@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { Product, fetchProductDetails, fetchOtherProductColour } from "../../services/funcs";
+import { Product, fetchProductDetails, fetchOtherProductColour, addNewProductToCart } from "../../services/funcs";
+import { useUserStore } from "../../store/userStore";
 
 import SelectSize from "./SelectSize";
 import AddToCartBtn from "./AddToCartBtn";
@@ -19,6 +20,8 @@ type ObjectKey = keyof typeof colourCodes;
 
 const DetailsContainer = () => {
   const { productId } = useParams();
+  const userProfile = useUserStore(state => state.userProfile);
+  const setUserProfile = useUserStore(state => state.updateUserProfile);
 
   const [productDetails, setProductDetails] = useState<Product>();
   const [selectedSize, setSelectedSize] = useState("Select Size");
@@ -42,9 +45,20 @@ const DetailsContainer = () => {
     setProductDetails(details);
   }
 
-  const handleAddToCart = () => {
-    // disable if no userId
+  const handleAddToCart = async () => {
+    if (!userProfile || !productId) return;
 
+    if (selectedSize === "Select Size") {
+      alert("Please choose a size");
+      return;
+    }
+
+
+    setAddingProduct(true);
+
+    await addNewProductToCart(userProfile._id, productId, selectedSize, setUserProfile);
+
+    setAddingProduct(false);
   }
 
   return (

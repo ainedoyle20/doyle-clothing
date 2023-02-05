@@ -20,7 +20,12 @@ export default {
             name: "count",
             title: "Product Count",
             type: "number"
-          }          
+          },
+          {
+            name: "size",
+            title: "Product Size",
+            type: "string"
+          }         
         ]
       }]
     }
