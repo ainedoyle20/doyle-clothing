@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { Product, fetchProductDetails, fetchOtherProductColour, addNewProductToCart } from "../../services/funcs";
+import { Product, fetchProductDetails, fetchOtherProductColour, addNewProductToCart, addExistingProductToCart } from "../../services/funcs";
 import { useUserStore } from "../../store/userStore";
 
 import SelectSize from "./SelectSize";
@@ -46,17 +46,36 @@ const DetailsContainer = () => {
   }
 
   const handleAddToCart = async () => {
-    if (!userProfile || !productId) return;
+    if (!productId || !productDetails?._id) {
+      alert("Something went wrong please try again later.");
+      return;
+    }
+
+    if (!userProfile || !userProfile?._id) {
+      alert("Please log in to add products to your cart.");
+      return;
+    }
 
     if (selectedSize === "Select Size") {
       alert("Please choose a size");
       return;
     }
 
-
     setAddingProduct(true);
 
-    await addNewProductToCart(userProfile._id, productId, selectedSize, setUserProfile);
+    const existingProduct = userProfile.userCart.filter(cartItem => cartItem.cartProduct._id === productDetails._id)[0];
+
+    if (existingProduct) {
+      if (existingProduct.size === selectedSize) {
+        // exact same product and size -> increment cartProduct count
+        await addExistingProductToCart(userProfile._id, existingProduct._key, setUserProfile);
+      } else {
+        await addNewProductToCart(userProfile._id, productDetails._id, selectedSize, setUserProfile);
+      }
+    } else {
+      // Product is not in cart yet -> simply add to cart
+      await addNewProductToCart(userProfile._id, productDetails._id, selectedSize, setUserProfile);
+    }
 
     setAddingProduct(false);
   }

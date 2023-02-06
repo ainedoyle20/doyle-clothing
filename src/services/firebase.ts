@@ -19,19 +19,26 @@ type AuthInfo = {
   password: string;
 }
 
-export const registerUser = async (registerInfo: AuthInfo): Promise<string | undefined> => {
+type FirebaseUser = {
+  userId: string;
+  email: string | null;
+}
+
+export const registerUser = async (registerInfo: AuthInfo): Promise<FirebaseUser | undefined> => {
   try {
     const { user } = await createUserWithEmailAndPassword(auth, registerInfo.email, registerInfo.password);
-    return user?.uid;
+    const { uid, email } = user;
+    return { userId: uid, email };
   } catch (error) {
     console.log("Error registering user with firebase: ", error);
   }
 }
 
-export const loginUser = async (loginInfo: AuthInfo): Promise<string | undefined> => {
+export const loginUser = async (loginInfo: AuthInfo): Promise<FirebaseUser | undefined> => {
   try {
     const { user } = await signInWithEmailAndPassword(auth, loginInfo.email, loginInfo.password)
-    return user?.uid;
+    const { uid, email } = user;
+    return { userId: uid, email };
   } catch (error) {
     console.log("Error logging in user to firebase: ", error);
   }

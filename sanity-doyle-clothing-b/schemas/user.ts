@@ -4,6 +4,11 @@ export default {
   type: "document",
   fields: [
     {
+      name: "email",
+      title: "User Email",
+      type: "string"
+    },
+    {
       name: "userCart",
       title: "User Shopping Cart",
       type: "array",

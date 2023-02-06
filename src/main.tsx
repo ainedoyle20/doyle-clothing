@@ -1,12 +1,17 @@
-import ReactDOM from 'react-dom/client'
+import { render } from 'react-dom';
 import App from './App';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css'
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+// using React 17 as React 18 BREAKS Stripe.js
+
+const rootElement = document.getElementById("root");
+
+render(
   <BrowserRouter>
     <Routes>
       <Route path="/*" element={<App />} />
     </Routes>
   </BrowserRouter>,
+  rootElement
 );

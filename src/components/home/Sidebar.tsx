@@ -42,9 +42,11 @@ interface SidebarProps {
   setSubCategory(arg: string): void;
   category: string;
   subCategory: string;
+  setSearchTerm(arg: string): void;
+  setSelectedColour(arg: string): void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ setCategory, setSubCategory, category, subCategory}) => {
+const Sidebar: React.FC<SidebarProps> = ({ setCategory, setSubCategory, category, subCategory, setSearchTerm, setSelectedColour}) => {
 
   return (
     <div 
@@ -66,6 +68,8 @@ const Sidebar: React.FC<SidebarProps> = ({ setCategory, setSubCategory, category
           subCategory={subCategory}
           setCategory={setCategory}
           setSubCategory={setSubCategory}
+          setSearchTerm={setSearchTerm}
+          setSelectedColour={setSelectedColour}
         />
       ))}
 

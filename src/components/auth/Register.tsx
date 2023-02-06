@@ -18,15 +18,13 @@ const Register = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    const userId = await registerUser({ email: registerInfo.email, password: registerInfo.password });
+    const userInfo = await registerUser({ email: registerInfo.email, password: registerInfo.password });
 
-    console.log("userId: ", userId);
-
-    if (!userId) {
+    if (!userInfo || !userInfo?.userId) {
       alert("Sorry something went wrong, please try again later.");
       return;
     } else {
-      await createOrFetchUser(userId, setUserProfile);
+      await createOrFetchUser(userInfo.userId, userInfo.email, setUserProfile);
     }
 
     setRegisterInfo({

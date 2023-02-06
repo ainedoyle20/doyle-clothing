@@ -61,10 +61,11 @@ const fetchUserProfile = async (id: string): Promise<TUserProfile | undefined> =
   }
 }
 
-export const createOrFetchUser = async (userId: string, updateUserProfile: any): Promise<void> => {
+export const createOrFetchUser = async (userId: string, email: string | null, updateUserProfile: any): Promise<void> => {
   const doc = {
     _id: userId,
     _type: "user",
+    email: email ? email : "",
     userCart: []
   }
 
@@ -86,7 +87,7 @@ export const removeProductFromCart = async (id: string, productKey: string, upda
   try {
     await client.patch(id).unset([`userCart[_key=="${productKey}"]`]).commit();
 
-    await createOrFetchUser(id, updateUserProfile);
+    await createOrFetchUser(id, "", updateUserProfile);
   } catch (error) {
     console.log("Error removing product from cart: ", error);
   }
@@ -105,8 +106,18 @@ export const addNewProductToCart = async (id: string, productId: string, product
       size: productSize
     }]).commit();
 
-    await createOrFetchUser(id, updateUserProfile);
+    await createOrFetchUser(id, "", updateUserProfile);
   } catch (error) {
     console.log("Error removing product from cart: ", error);
+  }
+}
+
+export const addExistingProductToCart = async (id: string, cartProductKey: string, updateUserProfile:any): Promise<void> => {
+  try {
+    await client.patch(id).inc({[`userCart[_key=="${cartProductKey}"].count`]: 1}).commit();
+
+    await createOrFetchUser(id, "", updateUserProfile);
+  } catch (error) {
+    console.log("Error updating cart product count: ", error);
   }
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BiShoppingBag, BiUserCircle } from "react-icons/bi";
 
@@ -17,6 +17,19 @@ const Header = () => {
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [showUserOptions, setShowUserOptions] = useState(false);
+  const [cartTotal, setCartTotal] = useState(0);
+
+  useEffect(() => {
+    if (!user || !user?._id) {
+      setCartTotal(0);
+      return;
+    }
+
+    const counts = user.userCart.map(cartItem => cartItem.count);
+    // console.log("counts: ", counts);
+    const total = counts.reduce((acc, count) => count + acc ,0);
+    setCartTotal(total);
+  }, [user])
 
   const handleLogout = async () => {
     await logoutUser();
@@ -69,7 +82,7 @@ const Header = () => {
                 -translate-y-[25%] -translate-x-1/2
               "
             >
-              {user ? user.userCart.length : 0}
+              {cartTotal}
             </span>
           </div>
         </div>

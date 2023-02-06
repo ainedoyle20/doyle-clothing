@@ -6,9 +6,11 @@ interface CategoryProps {
   setSubCategory(arg: string): void;
   category: string;
   subCategory: string;
+  setSearchTerm(arg: string): void;
+  setSelectedColour(arg: string): void;
 }
 
-const Category: React.FC<CategoryProps> = ({ section, category, subCategory, setCategory, setSubCategory }) => {
+const Category: React.FC<CategoryProps> = ({ section, category, subCategory, setCategory, setSubCategory, setSearchTerm, setSelectedColour }) => {
   return (
     <div 
       className={`
@@ -23,6 +25,8 @@ const Category: React.FC<CategoryProps> = ({ section, category, subCategory, set
           onClick={() => {
             setCategory(section.mainCategory.toLowerCase());
             setSubCategory("");
+            setSearchTerm("");
+            setSelectedColour("");
           }}>
           {section.mainCategory}
         </div>
@@ -30,7 +34,11 @@ const Category: React.FC<CategoryProps> = ({ section, category, subCategory, set
           {section.subCategories.map((subC, idx) => (
             <span key={`${subC}-${idx}`}
               className={`${subC.toLowerCase() === subCategory ? "border-b-[1px] border-black" : ""} w-3/4`}
-              onClick={() => setSubCategory(subC.toLowerCase())}
+              onClick={() => {
+                setSubCategory(subC.toLowerCase());
+                setSearchTerm("");
+                setSelectedColour("");
+              }}
             >
               {subC}
             </span>

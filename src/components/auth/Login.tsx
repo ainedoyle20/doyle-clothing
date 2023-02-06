@@ -17,13 +17,13 @@ const Login = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    const userId = await loginUser(loginInfo);
+    const userInfo = await loginUser(loginInfo);
 
-    if (!userId) {
+    if (!userInfo) {
       alert("Sorry something went wrong, please try again later.");
       return;
     } else {
-      await createOrFetchUser(userId, setUserProfile);
+      await createOrFetchUser(userInfo.userId, userInfo.email, setUserProfile);
     }
 
     setLoginInfo({
