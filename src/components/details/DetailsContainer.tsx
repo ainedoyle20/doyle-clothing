@@ -63,7 +63,7 @@ const DetailsContainer = () => {
 
     setAddingProduct(true);
 
-    const existingProduct = userProfile.userCart.filter(cartItem => cartItem.cartProduct._id === productDetails._id)[0];
+    const existingProduct = userProfile.cartItems.filter(cartItem => cartItem.storedProduct._id === productDetails._id)[0];
 
     if (existingProduct) {
       if (existingProduct.size === selectedSize) {

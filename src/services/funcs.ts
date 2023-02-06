@@ -66,7 +66,8 @@ export const createOrFetchUser = async (userId: string, email: string | null, up
     _id: userId,
     _type: "user",
     email: email ? email : "",
-    userCart: []
+    cart: [],
+    orders: [],
   }
 
   try {
@@ -74,7 +75,7 @@ export const createOrFetchUser = async (userId: string, email: string | null, up
     if (Object.keys(res).length) {
       const profile = await fetchUserProfile(res?._id);
       if (profile) {
-        updateUserProfile({ _id: profile._id, userCart: profile.userCart });
+        updateUserProfile({ _id: profile._id, cartItems: profile.cartItems, orders: profile.orders });
       }
     }
 
@@ -85,7 +86,7 @@ export const createOrFetchUser = async (userId: string, email: string | null, up
 
 export const removeProductFromCart = async (id: string, productKey: string, updateUserProfile:any): Promise<void> => {
   try {
-    await client.patch(id).unset([`userCart[_key=="${productKey}"]`]).commit();
+    await client.patch(id).unset([`cartItems[_key=="${productKey}"]`]).commit();
 
     await createOrFetchUser(id, "", updateUserProfile);
   } catch (error) {
@@ -95,15 +96,16 @@ export const removeProductFromCart = async (id: string, productKey: string, upda
 
 export const addNewProductToCart = async (id: string, productId: string, productSize: string, updateUserProfile:any): Promise<void> => {
   try {
-    await client.patch(id).setIfMissing({ userCart: [] }).insert("after", "userCart[-1]", [{
+    await client.patch(id).setIfMissing({ cartItems: [] }).insert("after", "cartItems[-1]", [{
       _key: uuidv4(),
-      _type: "document",
-      cartProduct: {
+      _type: "productInfoObject",
+      count: 1,
+      size: productSize,
+      sortingNum: Date.now(),
+      storedProduct: {
         _type: "reference",
         _ref: productId
       },
-      count: 1,
-      size: productSize
     }]).commit();
 
     await createOrFetchUser(id, "", updateUserProfile);
@@ -114,7 +116,7 @@ export const addNewProductToCart = async (id: string, productId: string, product
 
 export const addExistingProductToCart = async (id: string, cartProductKey: string, updateUserProfile:any): Promise<void> => {
   try {
-    await client.patch(id).inc({[`userCart[_key=="${cartProductKey}"].count`]: 1}).commit();
+    await client.patch(id).inc({[`cartItems[_key=="${cartProductKey}"].count`]: 1}).commit();
 
     await createOrFetchUser(id, "", updateUserProfile);
   } catch (error) {

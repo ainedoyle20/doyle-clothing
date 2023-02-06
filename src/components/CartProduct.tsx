@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { AiFillDelete } from "react-icons/ai";
 import { Oval } from 'react-loader-spinner';
 
-import { TUserCart } from '../store/userStore';
+import { TCartItem } from '../store/userStore';
 
 interface CartProductProps {
-  cartProduct: TUserCart;
+  cartProduct: TCartItem;
   handleRemoveCartProduct(arg: string): void;
 }
 
 const CartProduct: React.FC<CartProductProps> = ({ cartProduct, handleRemoveCartProduct }) => {
-  const { _key, cartProduct: product, count, size } = cartProduct;
+  const { _key, count, size, storedProduct } = cartProduct;
 
   const [removingProduct, setRemovingProduct] = useState(false);
 
@@ -42,13 +42,13 @@ const CartProduct: React.FC<CartProductProps> = ({ cartProduct, handleRemoveCart
 
       <img 
         alt="product cover"
-        src={product?.image[0]?.asset?.url}
+        src={storedProduct?.image[0]?.asset?.url}
         className="w-[100px] h-auto"
       />
 
       <div className='w-full flex flex-col justify-center px-2 text-sm'>
         <span>
-          {product?.name}
+          {storedProduct?.name}
         </span>
 
         <span>
@@ -57,7 +57,7 @@ const CartProduct: React.FC<CartProductProps> = ({ cartProduct, handleRemoveCart
         
         <div className='flex gap-2'>
           <span>
-            €{product?.price}
+            €{storedProduct?.price}
           </span>
 
           <span>x</span>

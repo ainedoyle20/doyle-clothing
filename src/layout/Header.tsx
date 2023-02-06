@@ -25,7 +25,8 @@ const Header = () => {
       return;
     }
 
-    const counts = user.userCart.map(cartItem => cartItem.count);
+    
+    const counts = user.cartItems.map(cartItem => cartItem.count);
     // console.log("counts: ", counts);
     const total = counts.reduce((acc, count) => count + acc ,0);
     setCartTotal(total);

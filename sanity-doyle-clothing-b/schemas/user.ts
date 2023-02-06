@@ -9,28 +9,40 @@ export default {
       type: "string"
     },
     {
-      name: "userCart",
-      title: "User Shopping Cart",
+      name: "cartItems",
+      title: "Cart Items",
+      type: "array",
+      of: [{ type: "productInfoObject"}]
+    },
+    {
+      name: "orders",
+      title: "User Orders History",
       type: "array",
       of: [{
-        type: "document",
+        name: "order",
+        type: "object",
         fields: [
           {
-            name: "cartProduct",
-            title: "Cart Product",
-            type: "reference",
-            to: [{ type: "product" }]
+            type: "number",
+            name: "sortingNum",
+            title: "Number for sorting"
           },
           {
-            name: "count",
-            title: "Product Count",
-            type: "number"
+            type: "string",
+            name: "orderDate",
+            title: "Order Date"
           },
           {
-            name: "size",
-            title: "Product Size",
-            type: "string"
-          }         
+            type: "number",
+            name: "totalCost",
+            title: "Total Cost"
+          },
+          {
+            name: "products",
+            title: "Ordered Products",
+            type: "array",
+            of: [{ type: "productInfoObject"}]
+          },
         ]
       }]
     }

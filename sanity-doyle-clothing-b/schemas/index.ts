@@ -1,8 +1,9 @@
 import user from "./user";
 import product from "./product";
-import cartProduct from "./cartProduct";
+import productInfoObject from "./productInfoObject";
 
 export const schemaTypes = [
   user,
   product,
+  productInfoObject
 ]

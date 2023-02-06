@@ -24,8 +24,8 @@ const Dropdown = () => {
       border-2 border-black bg-[#FAF9F8] z-50 pt-1"
     >
       <div className="w-full h-[85%] overflow-scroll pb-2">
-        {userProfile?.userCart?.length 
-        ? <>{userProfile?.userCart.map((cartProduct, idx) => (
+        {userProfile?.cartItems?.length 
+        ? <>{userProfile?.cartItems.map((cartProduct, idx) => (
           <CartProduct key={cartProduct._key} cartProduct={cartProduct} handleRemoveCartProduct={handleRemoveProductFromCart} />
         ))}</>
         : <div className="flex justify-center items-center w-full h-full">EMPTY</div>
