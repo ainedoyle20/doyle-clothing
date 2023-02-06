@@ -103,6 +103,7 @@ const Header = () => {
                 className="cursor-pointer w-full px-5 hover:font-bold" 
                 onClick={() => {
                   setShowUserOptions(false);
+                  navigate("/orders");
                 }}
               >
                 Orders

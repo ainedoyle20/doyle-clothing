@@ -1,9 +1,7 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-import { Product } from "../services/funcs";
-
-type TStoredProduct = {
+export type TStoredProduct = {
   _id: string;
   colour: string;
   name: string;
