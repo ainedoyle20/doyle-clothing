@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useUserStore } from '../../store/userStore';
 import { incrementExistingProduct, decrementExistingProduct, removeProductFromCart } from '../../services/funcs';
+import getStripe from "../../lib/getStripe";
 
 import CheckoutProduct from './CheckoutProduct';
 
@@ -76,6 +77,35 @@ const CheckoutContainer = () => {
     setActiveKeyAction({ key: "", action: ""});
   }
 
+  const handleCheckout = async () => {
+    if (!userProfile) return
+    const stripe = await getStripe();
+
+    try {
+      const response = await fetch("http://localhost:5252/create-checkout-session", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userProfile.cartItems),
+      });
+
+      console.log("status: ", response.status);
+  
+      if (response.status === 500) return;
+  
+      const data = await response.json();
+      
+      if (data?.id) {
+        stripe.redirectToCheckout({ sessionId: data.id });
+      }
+      
+    } catch (e) {
+      console.log("Error: ", e);
+    }
+
+  }
+
   return (
     <>
     
@@ -100,8 +130,8 @@ const CheckoutContainer = () => {
           Continue Shopping
         </button>
 
-        <button type='button' className='text-lg py-1 px-2 border-2 border-black'>
-          Checkout with Stripe
+        <button type="button" className='bg-[#000000] text-[#ffffff] hover:bg-[#FAF9F8] hover:text-[#000000] border-2 border-black text-lg py-1 px-2' onClick={handleCheckout}>
+          Pay with Stripe
         </button>
       </div>
 
