@@ -90,7 +90,7 @@ const Header = () => {
       </div>
 
       {showDropdown ? (
-        <Dropdown />
+        <Dropdown setShowDropdown={setShowDropdown} />
       ) : 
         null
       }

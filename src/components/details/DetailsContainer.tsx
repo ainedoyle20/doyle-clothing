@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { Product, fetchProductDetails, fetchOtherProductColour, addNewProductToCart, addExistingProductToCart } from "../../services/funcs";
+import { Product, fetchProductDetails, fetchOtherProductColour, addNewProductToCart, incrementExistingProduct } from "../../services/funcs";
 import { useUserStore } from "../../store/userStore";
 
 import SelectSize from "./SelectSize";
@@ -68,7 +68,7 @@ const DetailsContainer = () => {
     if (existingProduct) {
       if (existingProduct.size === selectedSize) {
         // exact same product and size -> increment cartProduct count
-        await addExistingProductToCart(userProfile._id, existingProduct._key, setUserProfile);
+        await incrementExistingProduct(userProfile._id, existingProduct._key, setUserProfile);
       } else {
         await addNewProductToCart(userProfile._id, productDetails._id, selectedSize, setUserProfile);
       }

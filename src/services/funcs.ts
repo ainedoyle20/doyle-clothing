@@ -114,12 +114,22 @@ export const addNewProductToCart = async (id: string, productId: string, product
   }
 }
 
-export const addExistingProductToCart = async (id: string, cartProductKey: string, updateUserProfile:any): Promise<void> => {
+export const incrementExistingProduct = async (id: string, cartProductKey: string, updateUserProfile:any): Promise<void> => {
   try {
     await client.patch(id).inc({[`cartItems[_key=="${cartProductKey}"].count`]: 1}).commit();
 
     await createOrFetchUser(id, "", updateUserProfile);
   } catch (error) {
-    console.log("Error updating cart product count: ", error);
+    console.log("Error incrementing existing product count: ", error);
+  }
+}
+
+export const decrementExistingProduct = async (id: string, cartProductKey: string, updateUserProfile:any): Promise<void> => {
+  try {
+    await client.patch(id).dec({[`cartItems[_key=="${cartProductKey}"].count`]: 1}).commit();
+
+    await createOrFetchUser(id, "", updateUserProfile);
+  } catch (error) {
+    console.log("Error decrementing existing product count: ", error);
   }
 }

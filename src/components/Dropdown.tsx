@@ -1,3 +1,4 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useUserStore } from "../store/userStore";
@@ -5,7 +6,11 @@ import { removeProductFromCart } from "../services/funcs";
 
 import CartProduct from "./CartProduct";
 
-const Dropdown = () => {
+interface DropdownProps {
+  setShowDropdown(arg: boolean): void;
+}
+
+const Dropdown: React.FC<DropdownProps> = ({ setShowDropdown }) => {
   const navigate = useNavigate();
 
   const userProfile = useUserStore(state => state.userProfile);
@@ -35,7 +40,10 @@ const Dropdown = () => {
       <button 
         className="w-full h-[15%] flex items-center justify-center text-xl border-t-2 border-black
         bg-[#000000] text-[#ffffff] hover:bg-[#ffffff] hover:text-[#000000]"
-        onClick={() => navigate("/checkout")}
+        onClick={() => {
+          navigate("/checkout");
+          setShowDropdown(false);
+        }}
       >
         Checkout
       </button>

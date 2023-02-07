@@ -5,6 +5,9 @@ import Home from "./pages/Home";
 import ProductDetails from "./pages/ProductDetails";
 import Auth from "./pages/Auth";
 import Orders from "./pages/Orders";
+import Checkout from "./pages/Checkout";
+import Stripe from "./pages/Stripe";
+import OrderSummary from "./pages/OrderSummary";
 
 const App = () => {
   return (
@@ -18,6 +21,16 @@ const App = () => {
         <Route path="auth" element={<Auth />} />
 
         <Route path="orders" element={<Orders />} />
+
+        <Route path="checkout" >
+
+          <Route index element={<Checkout />} />
+
+          <Route path="stripe" element={<Stripe />} />
+
+          <Route path="summary" element={<OrderSummary />} />
+
+        </Route>
 
       </Route>
     </Routes>
