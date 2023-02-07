@@ -26,17 +26,21 @@ const OrdersContainer: React.FC<OrdersContainerProps> = ({ orderBy }) => {
   useEffect(() => {
     if (!userProfile || !userProfile?._id) return;
 
+    if (!loadingOrders) setLoadingOrders(true);
+
+    setTimeout(() => {
+      setLoadingOrders(false);
+    }, 500)
+
     const sortedOrders = userProfile.orders.sort((a, b) => {
       if (orderBy === "Newest") {
-        console.log(orderBy)
-        return a.sortingNum - b.sortingNum;
-      } else {
         return b.sortingNum - a.sortingNum;
+      } else {
+        return a.sortingNum - b.sortingNum;
       }
     })
 
     setOrders(sortedOrders);
-    setLoadingOrders(false);
 
   }, [userProfile, orderBy]);
 
@@ -73,8 +77,8 @@ const OrdersContainer: React.FC<OrdersContainerProps> = ({ orderBy }) => {
           order={order}
         />
       ))}
-    </div>
-  )
+    </div> 
+  );
 }
 
 export default OrdersContainer;
