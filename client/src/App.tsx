@@ -26,7 +26,7 @@ const App = () => {
 
           <Route index element={<Checkout />} />
 
-          <Route path="stripe" element={<Stripe />} />
+          <Route path="payment" element={<Stripe />} />
 
           <Route path="summary" element={<OrderSummary />} />
 

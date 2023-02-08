@@ -29,6 +29,8 @@ const CheckoutContainer = () => {
   }, [userProfile]);
 
   const handleIncrement = async (key: string) => {
+
+
     if (!userProfile || !userProfile?._id) {
       alert('Sorry somthing went wrong. Please try logging out and back in again.');
       return;
@@ -77,34 +79,34 @@ const CheckoutContainer = () => {
     setActiveKeyAction({ key: "", action: ""});
   }
 
-  const handleCheckout = async () => {
-    if (!userProfile) return
-    const stripe = await getStripe();
+  // const handleCheckout = async () => {
+  //   if (!userProfile) return
+  //   const stripe = await getStripe();
 
-    try {
-      const response = await fetch("http://localhost:5252/create-checkout-session", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userProfile.cartItems),
-      });
+  //   try {
+  //     const response = await fetch("http://localhost:5252/create-checkout-session", {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(userProfile.cartItems),
+  //     });
 
-      console.log("status: ", response.status);
+  //     console.log("status: ", response.status);
   
-      if (response.status === 500) return;
+  //     if (response.status === 500) return;
   
-      const data = await response.json();
+  //     const data = await response.json();
       
-      if (data?.id) {
-        stripe.redirectToCheckout({ sessionId: data.id });
-      }
+  //     if (data?.id) {
+  //       stripe.redirectToCheckout({ sessionId: data.id });
+  //     }
       
-    } catch (e) {
-      console.log("Error: ", e);
-    }
+  //   } catch (e) {
+  //     console.log("Error: ", e);
+  //   }
 
-  }
+  // }
 
   return (
     <>
@@ -130,7 +132,7 @@ const CheckoutContainer = () => {
           Continue Shopping
         </button>
 
-        <button type="button" className='bg-[#000000] text-[#ffffff] hover:bg-[#FAF9F8] hover:text-[#000000] border-2 border-black text-lg py-1 px-2' onClick={handleCheckout}>
+        <button type="button" className='bg-[#000000] text-[#ffffff] hover:bg-[#FAF9F8] hover:text-[#000000] border-2 border-black text-lg py-1 px-2' onClick={() => navigate("payment")}>
           Pay with Stripe
         </button>
       </div>
