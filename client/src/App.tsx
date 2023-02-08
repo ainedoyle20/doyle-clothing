@@ -6,8 +6,8 @@ import ProductDetails from "./pages/ProductDetails";
 import Auth from "./pages/Auth";
 import Orders from "./pages/Orders";
 import Checkout from "./pages/Checkout";
-import Stripe from "./pages/Stripe";
-import OrderSummary from "./pages/OrderSummary";
+import Payment from "./pages/Payment";
+import Confirmation from "./pages/Confirmation";
 
 const App = () => {
   return (
@@ -26,9 +26,9 @@ const App = () => {
 
           <Route index element={<Checkout />} />
 
-          <Route path="payment" element={<Stripe />} />
+          <Route path="payment" element={<Payment />} />
 
-          <Route path="summary" element={<OrderSummary />} />
+          <Route path="confirmation" element={<Confirmation />} />
 
         </Route>
 

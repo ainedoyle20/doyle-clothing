@@ -1,7 +1,7 @@
 import { uuidv4 } from "@firebase/util";
 import { client } from "./client";
 import { productsQuery, productDetailsQuery, otherColourQuery, userProfileQuery } from "./queries";
-import { TUserProfile } from "../store/userStore";
+import { TCartItem, TUserProfile } from "../store/userStore";
 
 export type Product = {
   _id: string;
@@ -84,6 +84,17 @@ export const createOrFetchUser = async (userId: string, email: string | null, up
   }
 }
 
+export const removeAllProductsFromCart = async (id: string, cartItems: TCartItem[], updateUserProfile: any): Promise<void> => {
+  const keys = cartItems.map(item => item._key);
+  try {
+    await Promise.all(keys.map(async (key) => await client.patch(id).unset([`cartItems[_key=="${key}"]`]).commit()))
+
+    await createOrFetchUser(id, "", updateUserProfile);
+  } catch (error) {
+    console.log("Error removing all products from cart: ", error);
+  }
+}
+
 export const removeProductFromCart = async (id: string, productKey: string, updateUserProfile:any): Promise<void> => {
   try {
     await client.patch(id).unset([`cartItems[_key=="${productKey}"]`]).commit();
@@ -131,5 +142,31 @@ export const decrementExistingProduct = async (id: string, cartProductKey: strin
     await createOrFetchUser(id, "", updateUserProfile);
   } catch (error) {
     console.log("Error decrementing existing product count: ", error);
+  }
+}
+
+export const addOrder = async (id: string, products: TCartItem[]): Promise<void> => {
+  const productsToStore = products.map(product => ({ 
+    _key: uuidv4(), 
+    _type: "productInfoObject", 
+    count: product.count, 
+    size: product.size, 
+    storedProduct: { 
+      _ref: product.storedProduct._id, 
+      _type: "reference"
+    }
+  }));
+
+  try {
+    await client.patch(id).setIfMissing({ orders: [] }).insert("after", "orders[-1]", [{
+      _key: uuidv4(),
+      _type: "order",
+      orderDate: new Date().toLocaleDateString('en-gb', { weekday:"long", year:"numeric", month:"long", day:"numeric"}),
+      sortingNum: Date.now(),
+      products: productsToStore
+    }]).commit();
+    
+  } catch (error) {
+    console.log("Error removing product from cart: ", error);
   }
 }

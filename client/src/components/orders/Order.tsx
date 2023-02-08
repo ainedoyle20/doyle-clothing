@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { TOrder } from '../../store/userStore';
 
@@ -9,6 +9,18 @@ interface OrderProps {
 }
 
 const Order: React.FC<OrderProps> = ({ order }) => {
+  const [total, setTotal] = useState(0);
+
+
+  useEffect(() => {
+    if (!order) return;
+
+    const cost = order.products.reduce((acc, product) => (product.count * Number(product.storedProduct.price)) + acc , 0)
+
+    setTotal(Number(cost.toFixed(2)));
+  }, []);
+
+
   return (
     <div className='w-full flex flex-col gap-5 border-y-[1px] border-black px-2 py-2'>
       <div className='w-full'>
@@ -25,7 +37,7 @@ const Order: React.FC<OrderProps> = ({ order }) => {
         <>
           <span className='text-xl mr-10'>Order Total: </span>
           <span className='text-xl mr-20'>
-            €{order.totalCost}
+            €{total}
           </span>
         </>
       </div>

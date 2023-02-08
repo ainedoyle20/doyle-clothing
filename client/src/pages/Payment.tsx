@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
+import { Appearance, StripeElementsOptions } from '@stripe/stripe-js';
 
 import { useUserStore } from '../store/userStore';
 
-import CheckoutForm from '../components/checkout/CheckoutForm';
+import CheckoutForm from '../components/payment/CheckoutForm';
+import CartSummary from '../components/payment/CartSummary';
 
 import getStripe from "../lib/getStripe";
 
@@ -40,21 +41,33 @@ const Stripe = () => {
 
   }, []);
 
-  const appearance = {
+  const appearance: Appearance = {
     theme: "stripe",
   };
-  const options = {
+  const options: StripeElementsOptions = {
     clientSecret,
     appearance,
   };
 
   return (
-    <div className='w-screen h-screen flex justify-center items-center'>
-      {stripePromise && clientSecret ? (
-        <Elements options={options} stripe={stripePromise}>
-          <CheckoutForm />
-        </Elements>
-      ) : null}
+    <div className='w-screen h-screen flex'>
+      <CartSummary cartItems={userProfile?.cartItems} />
+
+      <div className='w-1/2 h-full border-l-2 border-black flex flex-col justify-center items-center'>
+
+        <div className='flex flex-col gap-1 mb-8'>
+          <span className='w-full flex justify-center text-lg'>TEST CARD DETAILS</span>
+          <span>Card Number: 4242 4242 4242 4242</span>
+          <span>Expiration: Any Future Date</span>
+          <span>CVC: Any</span>
+        </div>
+
+        {stripePromise && clientSecret ? (
+          <Elements options={options} stripe={stripePromise}>
+            <CheckoutForm />
+          </Elements>
+        ) : null}
+      </div>
     </div>
   );
 }
