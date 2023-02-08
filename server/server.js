@@ -1,15 +1,26 @@
-require("dotenv").config({ path: "./.env" });
-
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
+
+const PORT = process.env.PORT || 5252;
 
 const app = express();
 
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+if (process.env.NODE_ENV !== 'production') require('dotenv').config({ path: "../client/.env" });
 
-app.use(express.static("../client"));
+const stripe = require("stripe")(process.env.VITE_STRIPE_SECRET_KEY);
+
+app.use(express.static(process.env.VITE_STATIC_DIR));
 app.use(express.json());
 app.use(cors());
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/build')));
+
+  app.get('*', function(req, res) {
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+  });
+};
 
 const calculateOrderAmount = (cartItems) => {
   const amount = cartItems.reduce((acc, cartItem) => (cartItem.count * Number(cartItem.storedProduct.price)) + acc , 0);
@@ -38,68 +49,5 @@ app.post("/create-payment-intent", async (req, res) => {
 });
 
 app.listen(5252, () =>
-  console.log(`Node server listening at http://localhost:5252`)
+  console.log(`Node server listening at http://localhost:5252 ${PORT}`)
 );
-
-// const express = require("express");
-// const cors = require("cors");
-// const bodyParser = require("body-parser");
-// const app = express();
-
-// const jsonParser = bodyParser.json();
-
-// require("dotenv").config({ path: "./.env" });
-
-// const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
-// app.use(cors());
-
-// app.post("/create-checkout-session", jsonParser, async (req, res) => {
-//   try {
-
-//     const params = {
-//       submit_type: 'pay',
-//       mode: 'payment',
-//       payment_method_types: ['card'],
-//       billing_address_collection: 'auto',
-//       shipping_options: [
-//         { shipping_rate: 'shr_1Lj242Af5D9mxr02BJIUTxCF' },
-//         { shipping_rate: 'shr_1Lj25EAf5D9mxr02Q0UkTz5U' },
-//       ],
-//       line_items: req.body.map((cartItem) => {
-//         const img = cartItem.storedProduct.image[0].asset.url;
-
-//         return {
-//           price_data: {
-//             currency: 'eur',
-//             product_data: {
-//               name: cartItem.storedProduct.name,
-//               images: [img],
-//             },
-//             unit_amount: Number(cartItem.storedProduct.price) * 100,
-//           },
-//           adjustable_quantity: {
-//             enabled: true,
-//             minimum: 1,
-//           },
-//           quantity: cartItem.count
-//         }
-//       }),
-//       success_url: `${req.headers.origin}/checkout/summary`,
-//       cancel_url: `${req.headers.origin}/checkout/?canceled=true`,
-//     }
-
-//     const session = await stripe.checkout.sessions.create(params);
-//     // res.redirect(303, session.url);
-//     res.status(200).json(session);
-
-//   } catch (error) {
-//     console.log({ error, body: req.body });
-//     res.status(400).json({ 'Failed': error });
-//   }
-// });
-
-// app.listen(5252, () =>
-//   console.log(`Node server listening at http://localhost:5252`)
-// );
-
